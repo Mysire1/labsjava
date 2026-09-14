@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library</title>
+</head>
+<body>
+<p>
+    User: <b th:text="${auth.name}"></b>
+    | Roles: <span th:each="a : ${auth.authorities}" th:if="${a.authority.startsWith('ROLE_')}" th:text="${a.authority} + ' '"></span>
+</p>
+<form th:action="@{/logout}" method="post"><button>Logout</button></form>
+
+<h2>Books</h2>
+<table border="1">
+    <tr><th>ID</th><th>Title</th><th>Author</th><th>Year</th><th></th></tr>
+    <tr th:each="b : ${books}">
+        <td th:text="${b.id}"></td>
+        <td th:text="${b.title}"></td>
+        <td th:text="${b.author}"></td>
+        <td th:text="${b.publishedYear}"></td>
+        <td>
+            <a th:href="@{/(edit=${b.id})}">Edit</a>
+            <form th:action="@{/books/{id}/delete(id=${b.id})}" method="post" style="display:inline">
+                <button>Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<h2 th:text="${book.id == null} ? 'Add book' : 'Edit book #' + ${book.id}"></h2>
+<form th:action="${book.id == null} ? @{/books} : @{/books/{id}(id=${book.id})}" method="post">
+    <input name="title" placeholder="Title" th:value="${book.title}" required>
+    <input name="author" placeholder="Author" th:value="${book.author}">
+    <input name="publishedYear" type="number" placeholder="Year" th:value="${book.publishedYear}">
+    <button>Save</button>
+    <a th:if="${book.id != null}" th:href="@{/}">Cancel</a>
+</form>
+</body>
+</html>
