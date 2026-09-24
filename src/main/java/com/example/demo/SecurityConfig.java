@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    SecurityFilterChain apiChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain apiChain(HttpSecurity http) {
         return http
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(auth -> auth
@@ -41,9 +41,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    SecurityFilterChain uiChain(HttpSecurity http, @Value("${keycloak.realm-url}") String realmUrl) throws Exception {
-        String keycloakLogout = realmUrl + "/protocol/openid-connect/logout"
-                + "?client_id=library-app&post_logout_redirect_uri=http://localhost:8080/";
+    SecurityFilterChain uiChain(HttpSecurity http, @Value("${keycloak.logout-url}") String keycloakLogout) {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/books/*/delete").hasRole("ADMIN")

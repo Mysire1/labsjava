@@ -13,6 +13,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.4
     command: start-dev --import-realm
+    restart:
+      always
     depends_on:
       postgres:
         condition: service_healthy
