@@ -1,0 +1,32 @@
+{{- $postgres := include "library.componentName" (dict "root" . "component" "postgres") -}}
+# Hook: before every upgrade make sure the database is reachable, otherwise abort the upgrade.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "library.fullname" . }}-pre-upgrade
+  labels:
+    {{- include "library.labels" (dict "root" . "component" "hook") | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 60
+  template:
+    metadata:
+      labels:
+        {{- include "library.podLabels" (dict "root" . "component" "hook") | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: check-db
+          image: {{ .Values.postgres.image }}
+          command: ["sh", "-c", "pg_isready -h {{ $postgres }} -p 5432 && echo 'database is ready, upgrading to {{ include "library.image" . }}'"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi

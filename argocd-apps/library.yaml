@@ -1,0 +1,28 @@
+# Library app: Helm chart charts/library with values-minikube.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: library
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Mysire1/labsjava.git
+    targetRevision: master
+    path: charts/library
+    helm:
+      releaseName: library
+      valueFiles:
+        - values-minikube.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: library
+  syncPolicy:
+    automated:
+      prune: true
+      # lab step 6a: start with false (manual drift -> OutOfSync), then switch to true in Git
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true

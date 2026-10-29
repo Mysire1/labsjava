@@ -1,0 +1,25 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "library.fullname" . }}
+  labels:
+    {{- include "library.labels" (dict "root" . "component" "app") | nindent 4 }}
+  annotations:
+    # UI login keeps OAuth2 state in the HTTP session, so pin each browser to one pod
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/session-cookie-name: {{ include "library.fullname" . }}-route
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "library.fullname" . }}
+                port:
+                  name: http
+{{- end }}

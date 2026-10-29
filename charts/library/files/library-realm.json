@@ -1,0 +1,63 @@
+{
+  "realm": "library",
+  "enabled": true,
+  "sslRequired": "none",
+  "roles": {
+    "realm": [
+      { "name": "USER" },
+      { "name": "ADMIN" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "library-app",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "${OIDC_CLIENT_SECRET}",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": ["{{ .Values.config.appUrl }}/*"],
+      "webOrigins": ["{{ .Values.config.appUrl }}"],
+      "attributes": {
+        "post.logout.redirect.uris": "{{ .Values.config.appUrl }}/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "roles",
+            "multivalued": "true",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "user",
+      "enabled": true,
+      "email": "user@library.local",
+      "emailVerified": true,
+      "firstName": "Regular",
+      "lastName": "User",
+      "credentials": [{ "type": "password", "value": "${LIBRARY_USER_PASSWORD}", "temporary": false }],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@library.local",
+      "emailVerified": true,
+      "firstName": "Library",
+      "lastName": "Admin",
+      "credentials": [{ "type": "password", "value": "${LIBRARY_ADMIN_PASSWORD}", "temporary": false }],
+      "realmRoles": ["USER", "ADMIN"]
+    }
+  ]
+}

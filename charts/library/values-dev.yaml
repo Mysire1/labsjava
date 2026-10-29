@@ -1,0 +1,20 @@
+# dev: 1 replica, small resources, no app Ingress (open via kubectl port-forward on localhost:8080)
+replicaCount: 1
+
+image:
+  tag: "1.0.0"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 384Mi
+  limits:
+    cpu: "1"
+    memory: 768Mi
+
+config:
+  appUrl: http://localhost:8080
+  logLevel: DEBUG
+
+ingress:
+  enabled: false

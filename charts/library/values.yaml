@@ -1,0 +1,79 @@
+# Defaults = dev environment.
+
+replicaCount: 1
+
+# a stuck rollout (e.g. bad image tag) is reported as failed / Argo CD Degraded after this
+progressDeadlineSeconds: 120
+
+image:
+  repository: ghcr.io/mysire1/labsjava
+  # defaults to .Chart.AppVersion when empty
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 384Mi
+  limits:
+    cpu: "1"
+    memory: 768Mi
+
+# app configuration -> ConfigMap
+config:
+  # external URL of the UI (used for OIDC redirect/logout)
+  appUrl: http://localhost:8080
+  logLevel: INFO
+
+ingress:
+  enabled: false
+  className: nginx
+  host: library.local
+
+# Secrets. create=true renders them from the values below (demo values only, pass real ones with --set).
+# create=false: chart renders no Secret objects, they must exist in the namespace already
+# (see bootstrap/create-secrets.sh), so nothing sensitive is stored in Git.
+secrets:
+  create: true
+  oidcClientSecret: library-secret
+  # passwords of the demo realm users "user" and "admin"
+  userPassword: user
+  adminPassword: admin
+
+# e.g. [{name: ghcr-pull}] when the image registry is private
+imagePullSecrets: []
+
+postgres:
+  image: postgres:17
+  database: library
+  username: library
+  password: library
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+keycloak:
+  image: quay.io/keycloak/keycloak:26.4
+  # Keycloak is always exposed: the browser is redirected to it on login
+  host: keycloak.local
+  adminUsername: admin
+  adminPassword: admin
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi

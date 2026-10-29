@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: library
+  namespace: library
+  labels:
+    app.kubernetes.io/name: library
+    app.kubernetes.io/part-of: library
+  annotations:
+    # UI login keeps OAuth2 state in the HTTP session, so pin each browser to one pod
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/session-cookie-name: library-route
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: library.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: library
+                port:
+                  name: http

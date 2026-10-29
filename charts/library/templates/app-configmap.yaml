@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "library.fullname" . }}-config
+  labels:
+    {{- include "library.labels" (dict "root" . "component" "app") | nindent 4 }}
+data:
+  APP_URL: {{ .Values.config.appUrl | quote }}
+  KEYCLOAK_URL: {{ printf "http://%s" .Values.keycloak.host | quote }}
+  KEYCLOAK_INTERNAL_URL: {{ printf "http://%s:8080" (include "library.componentName" (dict "root" . "component" "keycloak")) | quote }}
+  SPRING_DATASOURCE_URL: {{ printf "jdbc:postgresql://%s:5432/%s" (include "library.componentName" (dict "root" . "component" "postgres")) .Values.postgres.database | quote }}
+  LOGGING_LEVEL_ROOT: {{ .Values.config.logLevel | quote }}

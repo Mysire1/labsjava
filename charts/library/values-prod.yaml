@@ -1,0 +1,21 @@
+# prod: 3 replicas, bigger resources, newer image, app exposed via Ingress
+replicaCount: 3
+
+image:
+  tag: "1.1.0"
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi
+  limits:
+    cpu: "2"
+    memory: 1Gi
+
+config:
+  appUrl: http://library.local
+  logLevel: WARN
+
+ingress:
+  enabled: true
+  host: library.local

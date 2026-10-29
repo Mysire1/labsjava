@@ -44,6 +44,7 @@ public class SecurityConfig {
     SecurityFilterChain uiChain(HttpSecurity http, @Value("${keycloak.logout-url}") String keycloakLogout) {
         return http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/health/**", "/version").permitAll()
                         .requestMatchers(HttpMethod.POST, "/books/*/delete").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(u -> u.userAuthoritiesMapper(keycloakRoles())))

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: library
+description: Library app (Spring Boot + Thymeleaf UI) with PostgreSQL and Keycloak
+type: application
+# chart version: bump on every change to templates/values
+version: 0.1.0
+# application version: default image tag
+appVersion: "1.0.0"

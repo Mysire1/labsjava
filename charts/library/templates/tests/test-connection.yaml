@@ -1,0 +1,31 @@
+{{- $svc := printf "http://%s:%v" (include "library.fullname" .) .Values.service.port -}}
+# helm test: the app answers on its Service, is ready and runs the expected version.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "library.fullname" . }}-test-connection
+  labels:
+    {{- include "library.labels" (dict "root" . "component" "test") | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  restartPolicy: Never
+  containers:
+    - name: curl
+      image: curlimages/curl:8.11.1
+      command:
+        - sh
+        - -c
+        - |
+          set -e
+          curl -fsS {{ $svc }}/actuator/health/readiness
+          echo
+          curl -fsS {{ $svc }}/version | grep '"version":"{{ .Values.image.tag | default .Chart.AppVersion }}"'
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi

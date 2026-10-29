@@ -1,0 +1,19 @@
+Release "{{ .Release.Name }}" installed in namespace "{{ .Release.Namespace }}", image {{ include "library.image" . }}, {{ .Values.replicaCount }} replica(s).
+
+Wait until pods are ready:
+  kubectl -n {{ .Release.Namespace }} get pods -l app.kubernetes.io/instance={{ .Release.Name }} -w
+
+Hosts {{ if .Values.ingress.enabled }}{{ .Values.ingress.host }} and {{ end }}{{ .Values.keycloak.host }} must point to the ingress (minikube on macOS: "127.0.0.1 ..." in /etc/hosts and keep "minikube tunnel" running).
+
+{{- if .Values.ingress.enabled }}
+
+Open the app: http://{{ .Values.ingress.host }}
+{{- else }}
+
+Open the app:
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "library.fullname" . }} 8080:{{ .Values.service.port }}
+  then {{ .Values.config.appUrl }}
+{{- end }}
+
+Users: user/user, admin/admin. Version: curl {{ .Values.config.appUrl }}/version
+Run tests: helm test {{ .Release.Name }} -n {{ .Release.Namespace }}

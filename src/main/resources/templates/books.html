@@ -36,5 +36,6 @@
     <button>Save</button>
     <a th:if="${book.id != null}" th:href="@{/}">Cancel</a>
 </form>
+<p><small>Version: <span th:text="${@environment.getProperty('app.version')}"></span></small></p>
 </body>
 </html>

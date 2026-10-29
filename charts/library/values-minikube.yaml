@@ -1,0 +1,32 @@
+# Values used by Argo CD (argocd-apps/library.yaml) on minikube.
+# Secrets are NOT in Git: create them once with bootstrap/create-secrets.sh.
+
+replicaCount: 2
+
+image:
+  tag: "1.0.0"
+  # always pull from the registry, never use an image loaded with "minikube image load"
+  pullPolicy: Always
+
+config:
+  appUrl: http://library.local
+  logLevel: INFO
+
+ingress:
+  enabled: true
+  host: library.local
+
+secrets:
+  create: false
+  oidcClientSecret: ""
+  userPassword: ""
+  adminPassword: ""
+
+postgres:
+  password: ""
+
+keycloak:
+  adminPassword: ""
+
+imagePullSecrets:
+  - name: ghcr-pull
