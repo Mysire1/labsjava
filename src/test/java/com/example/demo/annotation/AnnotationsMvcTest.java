@@ -1,6 +1,7 @@
 package com.example.demo.annotation;
 
 import com.example.demo.book.BookDto;
+import com.example.demo.book.BookDetailsService;
 import com.example.demo.book.BookRestController;
 import com.example.demo.book.BookService;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ class AnnotationsMvcTest {
 
     @BeforeEach
     void setUp() {
-        mvc = MockMvcBuilders.standaloneSetup(new BookRestController(service))
+        mvc = MockMvcBuilders.standaloneSetup(new BookRestController(service, mock(BookDetailsService.class)))
                 .setCustomArgumentResolvers(new CurrentUsernameResolver())
                 .build();
     }

@@ -20,6 +20,9 @@ class BookRestControllerTest {
     @Mock
     private BookService service;
 
+    @Mock
+    private BookDetailsService detailsService;
+
     @InjectMocks
     private BookRestController controller;
 
@@ -35,6 +38,14 @@ class BookRestControllerTest {
         when(service.findById(1L)).thenReturn(DTO);
 
         assertThat(controller.findById(1L)).isEqualTo(DTO);
+    }
+
+    @Test
+    void detailsDelegatesToDetailsService() {
+        BookDetails details = new BookDetails(DTO, 4.5, "url");
+        when(detailsService.details(1L)).thenReturn(details);
+
+        assertThat(controller.details(1L)).isEqualTo(details);
     }
 
     @Test

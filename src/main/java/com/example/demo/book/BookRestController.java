@@ -22,6 +22,7 @@ import java.util.List;
 public class BookRestController {
 
     private final BookService service;
+    private final BookDetailsService detailsService;
 
     @GetMapping
     public List<BookDto> findAll() {
@@ -31,6 +32,11 @@ public class BookRestController {
     @GetMapping("/{id}")
     public BookDto findById(@PathVariable Long id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/{id}/details")
+    public BookDetails details(@PathVariable Long id) {
+        return detailsService.details(id);
     }
 
     @GetMapping("/me")
