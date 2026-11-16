@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotNullArgsAspect {
 
-    @Before("@annotation(com.example.demo.aop.NotNullArgs)")
+    @Before("@annotation(NotNullArgs)")
     public void check(JoinPoint jp) {
         Object[] args = jp.getArgs();
         for (int i = 0; i < args.length; i++) {

@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Component
 public class TranslateDbErrorsAspect {
 
-    @AfterThrowing(pointcut = "@annotation(com.example.demo.aop.TranslateDbErrors)", throwing = "ex")
+    @AfterThrowing(pointcut = "@annotation(TranslateDbErrors)", throwing = "ex")
     public void translate(JoinPoint jp, DataAccessException ex) {
         log.error("DB error in {}", jp.getSignature().toShortString(), ex);
         throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Database is unavailable", ex);
