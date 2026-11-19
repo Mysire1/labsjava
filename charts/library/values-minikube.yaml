@@ -4,9 +4,9 @@
 replicaCount: 2
 
 image:
-  tag: "sha-d0b336057b232701cc32ddf54c57849f92f771e0"
-  # always pull from the registry, never use an image loaded with "minikube image load"
-  pullPolicy: Always
+  tag: "1.0.0"
+  # CI builds amd64 only; on Apple Silicon minikube use the arm64 image loaded with "minikube image load"
+  pullPolicy: IfNotPresent
 
 config:
   appUrl: http://library.local
