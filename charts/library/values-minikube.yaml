@@ -4,7 +4,7 @@
 replicaCount: 2
 
 image:
-  tag: "1.0.0"
+  tag: "sha-d0b336057b232701cc32ddf54c57849f92f771e0"
   # always pull from the registry, never use an image loaded with "minikube image load"
   pullPolicy: Always
 
