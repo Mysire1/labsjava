@@ -23,6 +23,6 @@ spec:
     automated:
       prune: true
       # lab step 6a: start with false (manual drift -> OutOfSync), then switch to true in Git
-      selfHeal: false
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
