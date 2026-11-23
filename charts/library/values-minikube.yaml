@@ -4,7 +4,7 @@
 replicaCount: 2
 
 image:
-  tag: "9.9.9"
+  tag: "1.1.0"
   # CI builds amd64 only; on Apple Silicon minikube use the arm64 image loaded with "minikube image load"
   pullPolicy: IfNotPresent
 
